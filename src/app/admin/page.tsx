@@ -7,6 +7,8 @@ import Revenue from '../../assets/Revenue.svg';
 import Order from '../../assets/Order.svg';
 import { InfoCard } from '@/components/AdminComponents/InfoCard';
 import ListClient from './ListClient';
+import { ButtonAdm } from '@/components/Buttons/ButtonAdm';
+import { CreateProductModal } from '@/components/modal/CreateProductModal';
 
 export default async function Admin() {
   const result = getCredentials();
@@ -49,10 +51,16 @@ export default async function Admin() {
             />
           </section>
           <section className="flex w-full flex-1 items-center gap-3 text-gray-100">
-            <div className="flex h-full grow-[5] rounded-md bg-teal-950 p-2">
-              1
+            <div className="flex h-full grow-[5] gap-1 rounded-md bg-teal-950 p-2">
+              <div className="grow-[5] rounded-md  bg-gray-700 p-1">1</div>
+              <div className="max-w flex max-w-[170px] grow-[1] flex-col gap-2 rounded-md bg-zinc-400/20 p-1 ">
+                <CreateProductModal>
+                  <ButtonAdm>Cadastro de Categoria</ButtonAdm>
+                </CreateProductModal>
+                <ButtonAdm>Cadastro de Produto</ButtonAdm>
+                <ButtonAdm>Cadastro de Produto</ButtonAdm>
+              </div>
             </div>
-
             {/* @ts-expect-error Server Component */}
             <ListClient />
           </section>

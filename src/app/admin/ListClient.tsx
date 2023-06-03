@@ -45,12 +45,6 @@ export default async function ListClient() {
           {data.map((user: any) => (
             <>
               <ListItem key={user.id} user_infos={user} />
-              <ListItem key={user.id} user_infos={user} />
-              <ListItem key={user.id} user_infos={user} />
-              <ListItem key={user.id} user_infos={user} />
-              <ListItem key={user.id} user_infos={user} />
-              <ListItem key={user.id} user_infos={user} />
-              <ListItem key={user.id} user_infos={user} />
             </>
           ))}
         </div>

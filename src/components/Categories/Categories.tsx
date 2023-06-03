@@ -1,5 +1,5 @@
 import { api } from '@/lib/api';
-import { Cpu, LayoutList, Satellite } from 'lucide-react';
+import { Cpu, LayoutList } from 'lucide-react';
 import { Fragment } from 'react';
 import { ProductDivider } from '../Divider';
 import { ProductCard } from '../ProductCard';
@@ -25,27 +25,21 @@ export interface ProductCardProps {
 }
 
 export default async function Categories() {
-  let categories: Category[] = [];
-  try {
-    const { data: categories_result } = await api.get('/category');
-    categories = categories_result;
-  } catch (error) {
-    console.log({ error });
-  }
+  const { data: categories } = await api.get<Category[]>('/category');
 
   return (
     <>
       {categories.map(async (category) => {
-        let products: ProductCardProps[] = [];
-
-        const { data: product } = await api.get('/product/by-category', {
-          params: {
-            category_id: category.id,
-            page: 1,
-            per_page: 10,
-          },
-        });
-        products = product;
+        const { data: products } = await api.get<ProductCardProps[]>(
+          '/product/by-category',
+          {
+            params: {
+              category_id: category.id,
+              page: 1,
+              per_page: 10,
+            },
+          }
+        );
 
         type ObjType = { [key: string]: any };
 
