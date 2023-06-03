@@ -13,11 +13,9 @@ export const Hero = () => {
         <div className="z-2 flex w-full flex-1 items-center justify-end">
           <div className="mr-48 max-w-[500px]">
             <p className="items-center font-light">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Consectetur, aliquam. Dolorum, deserunt vero ducimus debitis error
-              eum dicta quis ea? Id sunt quo aperiam quae asperiores distinctio
-              a voluptates et? nsectetur, aliquam. Dolorum, deserunt vero
-              ducimus debitis error
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consectetur, aliquam. Dolorum,
+              deserunt vero ducimus debitis error eum dicta quis ea? Id sunt quo aperiam quae asperiores
+              distinctio a voluptates et? nsectetur, aliquam. Dolorum, deserunt vero ducimus debitis error
             </p>
           </div>
         </div>

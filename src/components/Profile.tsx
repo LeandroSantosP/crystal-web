@@ -2,7 +2,7 @@ import { getCredentials } from '@/lib/getCredentials';
 import { LogOut } from 'lucide-react';
 
 export const Profile = () => {
-  const { avatar_url, name, sub, roles } = getCredentials();
+  const result = getCredentials();
 
   return (
     <div className="group flex h-full w-14 cursor-pointer rounded-full ">
@@ -18,7 +18,7 @@ export const Profile = () => {
       {/* eslint-disable-next-line */}
       <img
         className="rounded-full group-hover:hidden"
-        src={avatar_url}
+        src={result?.avatar_url}
         alt="avatar do perfil do usuário"
       />
     </div>
