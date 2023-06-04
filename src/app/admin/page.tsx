@@ -55,9 +55,9 @@ export default async function Admin() {
               <div className="grow-[5] rounded-md  bg-gray-700 p-1">1</div>
               <div className="max-w flex max-w-[170px] grow-[1] flex-col gap-2 rounded-md bg-zinc-400/20 p-1 ">
                 <CreateProductModal>
-                  <ButtonAdm>Cadastro de Categoria</ButtonAdm>
+                  <ButtonAdm>Cadastro de Produto</ButtonAdm>
                 </CreateProductModal>
-                <ButtonAdm>Cadastro de Produto</ButtonAdm>
+                <ButtonAdm>Cadastro de Categoria</ButtonAdm>
                 <ButtonAdm>Cadastro de Produto</ButtonAdm>
               </div>
             </div>

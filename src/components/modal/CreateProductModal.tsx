@@ -1,15 +1,20 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
-import { Camera, X } from 'lucide-react';
-import { ButtonAdm } from '../Buttons/ButtonAdm';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toMoney, toNumber } from 'vanilla-masker';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { z } from 'zod';
-import { ErrorMessage } from '../ErrorMessage';
+import { useForm } from 'react-hook-form';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { ButtonAdm } from '../Buttons/ButtonAdm';
+import { toMoney, toNumber } from 'vanilla-masker';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Camera, CheckCheck, X } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+import { api } from '@/lib/api';
+import { ToastHook } from '../Toast';
+import { ErrorMessage } from '../ErrorMessage';
+import { LoadingForm } from '../LoadingForm';
 
 function FormaToDecimalToMoney(value: string) {
   const number = parseFloat(
@@ -21,7 +26,14 @@ function FormaToDecimalToMoney(value: string) {
 
 const form_data_schema = z.object({
   name: z.string().nonempty('Campo Obrigatório'),
-  description: z.string(),
+  description: z.string().refine((value) => {
+    console.log(value.length);
+
+    if (value.length < 20) {
+      return false;
+    }
+    return true;
+  }, 'Descrição deve conter no minemo 20 caracteres'),
   price: z
     .string()
     .nonempty('Campo Obrigatório')
@@ -60,8 +72,14 @@ export const CreateProductModal = ({
     formState: { errors },
     setError,
     clearErrors,
+    reset,
   } = useForm<form_product_data>({
     resolver: zodResolver(form_data_schema),
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const { ToastContainer, toast } = ToastHook({
+    Icon: <CheckCheck />,
+    theme: 'colored',
   });
   const [value, setValue] = useState<{ [key: string]: any }>({
     price: '',
@@ -83,6 +101,8 @@ export const CreateProductModal = ({
     format_value = toNumber(e.target.value);
     setValue({ ...value, stoke: format_value });
   };
+  const notify = () => toast.success('Produto criado com sucesso!');
+  const notify_peddling = () => toast.warning('Aguarde, criando o produto!');
 
   useEffect(() => {
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5mb
@@ -92,49 +112,80 @@ export const CreateProductModal = ({
       'image/png',
       'image/webp',
     ];
+    if (productImage) {
+      if (productImage.size >= MAX_FILE_SIZE) {
+        setError('root', {
+          message: 'A Imagem deve conter no máximo 5MB!',
+        });
+        return;
+      }
+
+      if (!ACCEPTED_IMAGE_TYPES.includes(productImage.type)) {
+        setError('root', {
+          message: `Deve ser uma image no seguintes formatos! [${ACCEPTED_IMAGE_TYPES}]`,
+        });
+        return;
+      }
+
+      clearErrors('root');
+
+      const previewURL = URL.createObjectURL(productImage);
+      setPreviewFile(previewURL);
+    }
+  }, [clearErrors, productImage, setError]);
+
+  const onSubmit = async (data: form_product_data) => {
     if (!productImage) {
       setError('root', {
         message: 'Imagem do produto e obrigatória!',
       });
       return;
     }
-    if (productImage.size >= MAX_FILE_SIZE) {
-      setError('root', {
-        message: 'A Imagem deve conter no máximo 5MB!',
+
+    setIsLoading(() => true);
+    notify_peddling();
+
+    try {
+      const formData = new FormData();
+
+      formData.append('infos', JSON.stringify(data));
+      formData.append('product_image', productImage);
+
+      const response = await api.post('/product', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      return;
+
+      if (response.status === 201) {
+        notify();
+        reset();
+        setProductImage(undefined);
+        setPreviewFile(null);
+        setValue({
+          price: '',
+          stoke: '',
+        });
+      }
+    } catch (error) {
+      // handling erros
+    } finally {
+      setIsLoading(() => false);
     }
-
-    if (!ACCEPTED_IMAGE_TYPES.includes(productImage.type)) {
-      setError('root', {
-        message: `Deve ser uma image no seguintes formatos! [${ACCEPTED_IMAGE_TYPES}]`,
-      });
-      return;
-    }
-
-    clearErrors('root');
-
-    const previewURL = URL.createObjectURL(productImage);
-    setPreviewFile(previewURL);
-  }, [clearErrors, productImage, setError]);
-
-  const onSubmit = (data: any) => {
-    console.log(productImage);
-
-    console.log({ ...data, productImage });
   };
-  console.log(errors);
 
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-gray-800/90" />
-        <Dialog.Content className="">
+        <Dialog.Content>
+          {ToastContainer}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="fixed left-[50%] top-[50%] flex h-full max-h-[540px] w-full max-w-[500px] translate-x-[-50%] translate-y-[-50%] flex-col rounded-[6px] bg-gray-600 p-[25px] focus:outline-none"
+            className={`fixed left-[50%] top-[50%] flex h-full max-h-[540px] w-full max-w-[500px] translate-x-[-50%] translate-y-[-50%] flex-col rounded-[6px] bg-gray-600 p-[25px] focus:outline-none`}
           >
+            {isLoading && <LoadingForm />}
             <Dialog.Title className="m-0 text-[17px] font-medium text-emerald-400">
               Criação de Produto
             </Dialog.Title>
@@ -151,7 +202,7 @@ export const CreateProductModal = ({
                 Anexar imagem
                 {'  '}
                 {errors.root?.message && (
-                  <p className=" bottom-[-1px] text-sm text-gray-100">
+                  <p className="bold bottom-[-1px] text-sm text-gray-100">
                     {errors.root?.message}
                   </p>
                 )}

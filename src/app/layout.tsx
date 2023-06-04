@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header';
 import './globals.css';
 import { Karla, Bai_Jamjuree } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
 
 const karla = Karla({
   subsets: ['latin'],
