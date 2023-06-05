@@ -27,8 +27,6 @@ function FormaToDecimalToMoney(value: string) {
 const form_data_schema = z.object({
   name: z.string().nonempty('Campo Obrigatório'),
   description: z.string().refine((value) => {
-    console.log(value.length);
-
     if (value.length < 20) {
       return false;
     }
@@ -81,10 +79,12 @@ export const CreateProductModal = ({
     Icon: <CheckCheck />,
     theme: 'colored',
   });
+
   const [value, setValue] = useState<{ [key: string]: any }>({
     price: '',
     stoke: '',
   });
+
   const [productImage, setProductImage] = useState<File>();
   const [previewFile, setPreviewFile] = useState<null | string>(null);
 

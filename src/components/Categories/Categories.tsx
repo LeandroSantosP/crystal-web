@@ -1,5 +1,5 @@
 import { api } from '@/lib/api';
-import { Cpu, LayoutList } from 'lucide-react';
+import { Cpu, Dumbbell, LayoutList } from 'lucide-react';
 import { Fragment } from 'react';
 import { ProductDivider } from '../Divider';
 import { ProductCard } from '../ProductCard';
@@ -16,12 +16,13 @@ export interface ProductCardProps {
   id: string;
   stoke: number;
   name: string;
-  images: [];
+  images_paths: string[];
   product_name: string;
   price: number;
   available: boolean;
   calc_average_ratings: number;
   evaluations: [];
+  categories: any[];
 }
 
 export default async function Categories() {
@@ -40,19 +41,22 @@ export default async function Categories() {
             },
           }
         );
-
         type ObjType = { [key: string]: any };
 
         const category_infos: ObjType = {
           names: {
             ['Unknown']: 'Desconhecida',
             ['Tecnologia']: 'Tecnologia',
+            ['Sport']: 'Sport',
           },
           icons: {
             ['Unknown']: <LayoutList />,
             ['Tecnologia']: <Cpu />,
+            ['Sport']: <Dumbbell />,
           },
         };
+
+        if (products.length === 0) return;
 
         return (
           <Fragment key={category.id}>
