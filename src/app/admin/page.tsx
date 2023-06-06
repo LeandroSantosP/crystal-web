@@ -9,9 +9,6 @@ import { InfoCard } from '@/components/AdminComponents/InfoCard';
 import ListClient from './ListClient';
 import { AdminPainel } from '@/components/AdminPainel';
 import { AdminPainelAside } from '@/components/AdminPainelAside';
-import { CreateProductModal } from '@/components/modal/CreateProductModal';
-import { ButtonAdm } from '@/components/Buttons/ButtonAdm';
-import { CreateCategoryModal } from '@/components/modal/CreateCategoryModal';
 
 export default async function Admin() {
   const result = getCredentials();

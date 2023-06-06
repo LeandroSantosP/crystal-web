@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import decode from 'jwt-decode';
+import { redirect } from 'next/navigation';
 
 interface User {
   sub: string;

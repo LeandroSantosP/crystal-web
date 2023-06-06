@@ -14,6 +14,7 @@ import { api } from '@/lib/api';
 import { ToastHook } from '../Toast';
 import { ErrorMessage } from '../ErrorMessage';
 import { LoadingForm } from '../LoadingForm';
+import Cookies from 'js-cookie';
 
 const form_data_schema = z.object({
   name: z.string().nonempty('Campo Obrigatório'),
@@ -32,6 +33,7 @@ export const CreateCategoryModal = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const jwt = Cookies.get('token');
   const {
     register,
     handleSubmit,
@@ -56,9 +58,17 @@ export const CreateCategoryModal = ({
     setIsLoading(() => true);
     notify_peddling();
     try {
-      const response = await api.post('/category', {
-        ...data,
-      });
+      const response = await api.post(
+        '/category',
+        {
+          ...data,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
 
       if (response.status === 201) {
         notify();

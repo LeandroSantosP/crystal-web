@@ -42,7 +42,9 @@ export const EditProductModal = ({
   categories_names,
 }: EditProductModalProps) => {
   const jwt = Cookie.get('token');
+
   const router = useRouter();
+
   const {
     action: { set_category_product },
     states: { loading: product_edit_loading },
@@ -59,10 +61,6 @@ export const EditProductModal = ({
   });
 
   const notify = () => toast.success('Produto editando com sucesso!');
-
-  useEffect(() => {
-    getAllCatagories();
-  }, [getAllCatagories]);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -82,9 +80,6 @@ export const EditProductModal = ({
           jwt,
         });
       }
-
-      router.refresh();
-      notify();
     }
     // try {
     //   const response = await api.post('/product', {
@@ -101,7 +96,11 @@ export const EditProductModal = ({
     // } finally {
     //   setIsLoading(() => false);
     // }
+    notify();
+    getAllCatagories();
   };
+
+  useEffect(() => {}, [getAllCatagories]);
   return (
     <>
       <Dialog.Root>

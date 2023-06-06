@@ -1,9 +1,17 @@
 import { create, SetState } from 'zustand';
 import { api } from '@/lib/api';
+import { ProductCardProps } from '@/components/Categories/Categories';
+
+interface category_list_props {
+  description: string;
+  id: string;
+  name: string;
+  subCategories: [];
+}
 
 interface CategoryProviderParams {
   states: {
-    category_list: [];
+    category_list: category_list_props[];
     error: any | null;
     loading: boolean;
   };

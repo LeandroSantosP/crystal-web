@@ -11,6 +11,7 @@ import { Camera, CheckCheck, X } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
+import Cookies from 'js-cookie';
 import { api } from '@/lib/api';
 import { ToastHook } from '../Toast';
 import { ErrorMessage } from '../ErrorMessage';
@@ -64,6 +65,7 @@ export const CreateProductModal = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const jwt = Cookies.get('token');
   const {
     register,
     handleSubmit,
@@ -154,6 +156,7 @@ export const CreateProductModal = ({
       const response = await api.post('/product', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${jwt}`,
         },
       });
 
