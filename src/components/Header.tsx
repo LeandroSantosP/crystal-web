@@ -7,6 +7,7 @@ import { getCredentials } from '@/lib/getCredentials';
 
 export const Header = () => {
   const isAuthenticated = cookies().has('token');
+
   const response = getCredentials();
 
   return (

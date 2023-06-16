@@ -2,6 +2,7 @@ import { Header } from '@/components/Header';
 import './globals.css';
 import { Karla, Bai_Jamjuree } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
+import {ToastProvider} from "@/shared/storage/Toast/ToastProvider";
 
 const karla = Karla({
   subsets: ['latin'],
@@ -24,6 +25,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+
   return (
     <html lang="en">
       <body

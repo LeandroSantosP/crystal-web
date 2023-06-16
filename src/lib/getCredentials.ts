@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
 import decode from 'jwt-decode';
-import { redirect } from 'next/navigation';
 
 interface User {
   sub: string;
@@ -10,6 +9,7 @@ interface User {
 }
 
 export function getCredentials() {
+
   const token = cookies().get('token')?.value;
 
   if (!token) {

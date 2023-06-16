@@ -1,8 +1,7 @@
 import { toast, ToastContainer } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
 
-interface ToastProp {
+export interface ToastProp {
   timer?: number;
   theme?: 'dark' | 'light' | 'colored';
   Icon: JSX.Element;

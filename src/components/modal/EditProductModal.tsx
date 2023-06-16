@@ -1,18 +1,14 @@
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect } from 'react';
+import {FormEvent, ReactNode} from 'react';
 import { ButtonAdm } from '../Buttons/ButtonAdm';
 import * as Dialog from '@radix-ui/react-dialog';
-import { CheckCheck, X } from 'lucide-react';
-import { z } from 'zod';
-
-import { api } from '@/lib/api';
+import { CheckCheck, Trash2 } from 'lucide-react';
 import { ToastHook } from '../Toast';
-import { ErrorMessage } from '../ErrorMessage';
 import { LoadingForm } from '../LoadingForm';
 import Image from 'next/image';
+
 import { Categories_Formatted_return } from '@/lib/TranslateCategories';
 import { CategoryADMCard } from '../CategoryADMCard';
 import { CheckBox } from '../CheckBox';
@@ -20,18 +16,10 @@ import { ProductCardProps } from '../Categories/Categories';
 import { ADMProvider } from '@/shared/storage';
 import { CategoryProvider } from '@/shared/storage/Categories/CategoryProvider';
 import Cookie from 'js-cookie';
-const form_data_schema = z.object({
-  name: z.string().nonempty('Campo Obrigatório'),
-  description: z.string().refine((value) => {
-    if (value.length < 20) {
-      return false;
-    }
-    return true;
-  }, 'Descrição deve conter no minemo 20 caracteres'),
-});
+import { RadixCloseButton } from "@/components/RadixCloseButton";
 
 interface EditProductModalProps {
-  children: React.ReactNode;
+  children: ReactNode;
   categories_names: Categories_Formatted_return;
   product: ProductCardProps;
 }
@@ -41,12 +29,11 @@ export const EditProductModal = ({
   product,
   categories_names,
 }: EditProductModalProps) => {
+
   const jwt = Cookie.get('token');
 
-  const router = useRouter();
-
   const {
-    action: { set_category_product },
+    action: { set_category_product, handle_reset_categories, getAllProducts },
     states: { loading: product_edit_loading },
   } = ADMProvider();
   const {
@@ -57,17 +44,24 @@ export const EditProductModal = ({
   const { ToastContainer, toast } = ToastHook({
     Icon: <CheckCheck />,
     theme: 'colored',
-    timer: 300,
+    timer: 2000,
+  });
+
+  const ResetCategories = ToastHook({
+    Icon: <Trash2 />,
+    theme: 'dark',
+    timer: 2000,
   });
 
   const notify = () => toast.success('Produto editando com sucesso!');
+  const notify_delete_categories = () => ResetCategories.toast.success('Categorias Resetadas com sucesso!');
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
     for (const pair of formData.entries()) {
-      const [key, value] = pair;
+      const [_, value] = pair;
 
       const category_registered = categories_names.some(
         (category) => category.original_name === value
@@ -78,29 +72,22 @@ export const EditProductModal = ({
           category_name: value as string,
           product_id: product.id,
           jwt,
+          is_add_category: true,
         });
       }
     }
-    // try {
-    //   const response = await api.post('/product', {
-    //     ...data,
-    //   });
 
-    //   if (response.status === 201) {
-    //     notify();
-    //   }
-    // } catch (error: any) {
-    //   if (error.response.data.message === 'product already exists') {
-    //     notify_error();
-    //   }
-    // } finally {
-    //   setIsLoading(() => false);
-    // }
     notify();
-    getAllCatagories();
+    await getAllProducts()
+    await getAllCatagories();
   };
 
-  useEffect(() => {}, [getAllCatagories]);
+  const reset_categories = async () => {
+    await handle_reset_categories(product.id);
+    await getAllProducts()
+    notify_delete_categories()
+  }
+
   return (
     <>
       <Dialog.Root>
@@ -109,6 +96,7 @@ export const EditProductModal = ({
           <Dialog.Overlay className="fixed inset-0 bg-gray-800/90" />
           <Dialog.Content>
             {ToastContainer}
+            {ResetCategories.ToastContainer}
             <form
               onSubmit={onSubmit}
               className={`fixed left-[50%] top-[50%] flex h-full max-h-[600px] w-full max-w-[800px] translate-x-[-50%] translate-y-[-50%] flex-col rounded-[6px] bg-gray-600 p-[25px] focus:outline-none`}
@@ -120,24 +108,31 @@ export const EditProductModal = ({
               <Dialog.Description className="mb-5 mt-[10px] text-[15px] leading-normal">
                 Preencher todos os campos abaixo para Salvar um novo produto.
               </Dialog.Description>
-
-              <section className="relative flex h-full w-full gap-1 pb-[20px] text-gray-50">
+              <section className=" flex h-full gap-1 pb-[20px] text-gray-50">
                 <Image
                   src={product.images_paths[0]}
                   alt="imagem de teste"
                   width={300}
                   height={300}
                   quality={100}
-                  className="bottom-2 rounded-md border-red-600 object-cover"
+                  className="bottom-2 max-h-[310px] rounded-md border-red-600 object-cover"
                 />
-                <fieldset className="flex  w-full flex-col gap-1 rounded-md bg-gray-700 p-2">
+                <fieldset className="flex flex-col gap-1 rounded-md bg-zinc-700 p-2">
+                  <div className="flex flex-col">
+
                   <label className="text-start text-[15px]" htmlFor="name">
-                    Categorias Cadastradas
+                    Categorias Cadastrada
                   </label>
-                  <div className="flex max-h-20 w-full grow-[1] gap-1 rounded-md bg-emerald-500 p-2">
-                    {categories_names.map(({ name }) => {
-                      return <CategoryADMCard key={name} content={name} />;
-                    })}
+
+
+                    <div className="flex max-h-20  w-[420px] gap-2">
+                      <div className="flex overflow-auto grow-[1] gap-1 rounded-md bg-emerald-500 p-2">
+                        {categories_names.map(({ name }) => {
+                          return <CategoryADMCard key={name} content={name} />;
+                        })}
+                      </div>
+                      <button className="bg-blackA9 rounded-md p-1" type="button" onClick={reset_categories}>Resetar</button>
+                    </div>
                   </div>
 
                   <label className="text-start text-[15px]" htmlFor="name">
@@ -154,7 +149,7 @@ export const EditProductModal = ({
                           key={name}
                           id={name}
                           name={name}
-                          defaultChecked={res ? true : false}
+                          defaultChecked={!!res}
                           text={res?.name || name}
                           value={name}
                         />
@@ -179,14 +174,7 @@ export const EditProductModal = ({
               <ButtonAdm type="submit" my_color="green">
                 Salvar produto
               </ButtonAdm>
-              <Dialog.Close asChild>
-                <button
-                  className="absolute right-[10px] top-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
-                  aria-label="Close"
-                >
-                  <X />
-                </button>
-              </Dialog.Close>
+              <RadixCloseButton />
             </form>
           </Dialog.Content>
         </Dialog.Portal>

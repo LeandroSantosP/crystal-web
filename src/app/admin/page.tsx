@@ -7,7 +7,7 @@ import Revenue from '../../assets/Revenue.svg';
 import Order from '../../assets/Order.svg';
 import { InfoCard } from '@/components/AdminComponents/InfoCard';
 import ListClient from './ListClient';
-import { AdminPainel } from '@/components/AdminPainel';
+import { AdminPanel } from '@/components/AdminPanel';
 import { AdminPainelAside } from '@/components/AdminPainelAside';
 
 export default async function Admin() {
@@ -52,7 +52,7 @@ export default async function Admin() {
           </section>
           <section className="flex w-full flex-1 items-center gap-3 text-gray-100">
             <div className="flex h-full grow-[5] justify-center gap-1 rounded-md bg-teal-950 p-2">
-              <AdminPainel />
+              <AdminPanel />
               <AdminPainelAside />
             </div>
             {/* @ts-expect-error Server Component */}

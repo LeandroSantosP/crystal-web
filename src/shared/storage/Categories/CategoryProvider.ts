@@ -1,6 +1,5 @@
 import { create, SetState } from 'zustand';
 import { api } from '@/lib/api';
-import { ProductCardProps } from '@/components/Categories/Categories';
 
 interface category_list_props {
   description: string;

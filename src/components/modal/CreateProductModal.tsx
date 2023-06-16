@@ -1,13 +1,12 @@
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
-
 import { useForm } from 'react-hook-form';
-import { ChangeEvent, useEffect, useState } from 'react';
+import {ChangeEvent, ReactNode, useEffect, useState} from 'react';
 import { ButtonAdm } from '../Buttons/ButtonAdm';
 import { toMoney, toNumber } from 'vanilla-masker';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Camera, CheckCheck, X } from 'lucide-react';
+import { Camera, CheckCheck } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
@@ -16,6 +15,7 @@ import { api } from '@/lib/api';
 import { ToastHook } from '../Toast';
 import { ErrorMessage } from '../ErrorMessage';
 import { LoadingForm } from '../LoadingForm';
+import {RadixCloseButton} from "@/components/RadixCloseButton";
 
 function FormaToDecimalToMoney(value: string) {
   const number = parseFloat(
@@ -25,22 +25,19 @@ function FormaToDecimalToMoney(value: string) {
   return Number(number);
 }
 
+
 const form_data_schema = z.object({
   name: z.string().nonempty('Campo Obrigatório'),
   description: z.string().refine((value) => {
-    if (value.length < 20) {
-      return false;
-    }
-    return true;
+    return value.length >= 20;
+
   }, 'Descrição deve conter no minemo 20 caracteres'),
   price: z
     .string()
     .nonempty('Campo Obrigatório')
     .refine((value) => {
-      if (value === 'R$ 0,00') {
-        return false;
-      }
-      return true;
+      return value !== 'R$ 0,00';
+
     }, 'Valor R$ 0,00 não e valido!')
     .transform((value) => {
       return FormaToDecimalToMoney(value);
@@ -50,12 +47,21 @@ const form_data_schema = z.object({
     .nonempty('Campo Obrigatório')
     .refine((value) => {
       const amount = parseInt(value);
-      if (amount < 10) {
-        return false;
-      }
-      return true;
+      return amount >= 10;
     }, 'Quantidade minima de 10')
     .transform((value) => Number(value)),
+  weight: z.string().nonempty("Campo Obrigatório").transform((value) => {
+    return parseInt(value);
+  }),
+  length: z.string().nonempty("Campo Obrigatório").transform((value) => {
+    return parseInt(value);
+  }),
+  width: z.string().nonempty("Campo Obrigatório").transform((value) => {
+    return parseInt(value);
+  }),
+  height: z.string().nonempty("Campo Obrigatório").transform((value) => {
+    return parseInt(value);
+  }),
 });
 
 type form_product_data = z.infer<typeof form_data_schema>;
@@ -63,7 +69,7 @@ type form_product_data = z.infer<typeof form_data_schema>;
 export const CreateProductModal = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const jwt = Cookies.get('token');
   const {
@@ -85,23 +91,34 @@ export const CreateProductModal = ({
   const [value, setValue] = useState<{ [key: string]: any }>({
     price: '',
     stoke: '',
+    weight: '',
+    height: '',
+    width: '',
+    length: '',
   });
 
   const [productImage, setProductImage] = useState<File>();
   const [previewFile, setPreviewFile] = useState<null | string>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let format_value: string;
-    if (e.target.name === 'price') {
-      format_value = toMoney(e.target.value, {
-        unit: 'R$',
-      });
-      setValue({ ...value, [e.target.name]: format_value });
-      return;
-    }
+    const fieldFormatters = {
+      price: (value: string) => toMoney(value, { unit: 'R$' }),
+      stoke: (value: string) => toNumber(value),
+      height: (value: string) => toNumber(value),
+      width: (value: string) => toNumber(value),
+      weight: (value: string) => toNumber(value),
+      length: (value: string) => toNumber(value),
+    } as { [key:string]: any }
 
-    format_value = toNumber(e.target.value);
-    setValue({ ...value, stoke: format_value });
+    const { name, value } = e.target;
+
+    if (fieldFormatters.hasOwnProperty(name)) {
+      const formatValue = fieldFormatters[name](value);
+      setValue((prevValue) => ({
+        ...prevValue,
+        [name]: formatValue,
+      }));
+    }
   };
   const notify = () => toast.success('Produto criado com sucesso!');
   const notify_peddling = () => toast.warning('Aguarde, criando o produto!');
@@ -168,6 +185,10 @@ export const CreateProductModal = ({
         setValue({
           price: '',
           stoke: '',
+          weight: '',
+          height: '',
+          width: '',
+          length: '',
         });
       }
     } catch (error) {
@@ -186,7 +207,7 @@ export const CreateProductModal = ({
           {ToastContainer}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className={`fixed left-[50%] top-[50%] flex h-full max-h-[540px] w-full max-w-[500px] translate-x-[-50%] translate-y-[-50%] flex-col rounded-[6px] bg-gray-600 p-[25px] focus:outline-none`}
+            className={`fixed left-[50%]  top-[50%] flex h-full max-h-[650px] w-full max-w-[500px] translate-x-[-50%] translate-y-[-50%] flex-col rounded-[6px] bg-gray-600 p-[25px] focus:outline-none`}
           >
             {isLoading && <LoadingForm />}
             <Dialog.Title className="m-0 text-[17px] font-medium text-emerald-400">
@@ -234,6 +255,9 @@ export const CreateProductModal = ({
               )}
             </fieldset>
 
+
+
+
             <fieldset className="relative flex w-full flex-col gap-1 pb-[20px] text-red-400">
               <label className="text-start text-[15px]" htmlFor="price">
                 Preço
@@ -277,6 +301,88 @@ export const CreateProductModal = ({
               )}
             </fieldset>
 
+            <fieldset className="relative  flex w-full flex-col gap-1 pb-[20px] text-red-400">
+              <label className="text-start text-emerald-400 leading-relaxed text-[15px]" htmlFor="description">
+                Specificacoes do produto!
+              </label>
+
+              <div className="flex gap-2 text-emerald-400 w-full overflow-hidden">
+                <div className="flex gap-2 max-w-[100px] flex-col justify-center">
+                  <label className="text-xs font-medium text-white" htmlFor="weight">
+                    Peso (Kg)
+                  </label>
+                  <input
+                      {...register("weight")}
+                      onChange={(e) => handleChange(e)}
+                      value={value.weight}
+                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
+                      id="weight"
+                      type="text"
+                  />
+                  {errors.weight?.message ? (
+                      <ErrorMessage xs>{errors.weight?.message}</ErrorMessage>
+                  ) : (
+                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                  )}
+                </div>
+                <div className="flex gap-2  max-w-[110px] flex-col justify-center">
+                  <label className="text-xs font-medium text-white" htmlFor="length">
+                    Comprimento (Cm)
+                  </label>
+                  <input
+                      {...register("length")}
+                      onChange={(e) => handleChange(e)}
+                      value={value.length}
+                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
+                      id="length"
+                      type="text"
+                  />
+                  {errors.length?.message ? (
+                      <ErrorMessage xs={true}>{errors.length?.message}</ErrorMessage>
+                  ) : (
+                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                  )}
+                </div>
+                <div className="flex gap-2  max-w-[100px] flex-col justify-center">
+                  <label className="text-xs font-medium text-white" htmlFor="width">
+                    Largura (Cm)
+                  </label>
+                  <input
+                      {...register("width")}
+                      onChange={(e) => handleChange(e)}
+                      value={value.width}
+                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
+                      type="text"
+                      id="width"
+                  />
+                  {errors.width?.message ? (
+                      <ErrorMessage xs={true}>{errors.width?.message}</ErrorMessage>
+                  ) : (
+                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                  )}
+                </div>
+                <div className="flex gap-2  max-w-[110px] flex-col justify-center">
+
+                  <label className="text-xs w-full font-medium text-white" htmlFor="height">
+                    Altura (Cm)
+                  </label>
+                  <input
+                      {...register("height")}
+                      onChange={(e) => handleChange(e)}
+                      value={value.height}
+                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
+                      type="text"
+                      id="height"
+                  />
+                  {errors.height?.message ? (
+                      <ErrorMessage xs={true}>{errors.height?.message}</ErrorMessage>
+                  ) : (
+                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                  )}
+                </div>
+              </div>
+            </fieldset>
+
             <fieldset className="relative flex w-full flex-col gap-1 pb-[20px] text-red-400">
               <label className="text-start text-[15px]" htmlFor="description">
                 Descrição do Produto
@@ -296,17 +402,11 @@ export const CreateProductModal = ({
               )}
             </fieldset>
 
+
             <ButtonAdm type="submit" my_color="green">
               Criar Produto
             </ButtonAdm>
-            <Dialog.Close asChild>
-              <button
-                className="hover:bg-violet4 absolute right-[10px] top-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
-                aria-label="Close"
-              >
-                <X />
-              </button>
-            </Dialog.Close>
+            <RadixCloseButton/>
           </form>
           {previewFile && (
             // eslint-disable-next-line

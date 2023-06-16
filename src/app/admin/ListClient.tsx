@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { api } from '@/lib/api';
 import { ListItem } from './ListItem';
-import Image from 'next/image';
 
 export interface UserCredentials {
   roles: string[];

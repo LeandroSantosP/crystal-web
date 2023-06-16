@@ -2,7 +2,6 @@ import Categories from '@/components/Categories/Categories';
 import { Hero } from '@/components/Hero';
 import { ToolBar } from '@/components/ToolBar';
 import React from 'react';
-import { ToastContainer } from 'react-toastify';
 
 export default function Home() {
   return (

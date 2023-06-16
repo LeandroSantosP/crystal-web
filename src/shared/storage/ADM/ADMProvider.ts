@@ -5,6 +5,7 @@ interface set_category_product_props {
   jwt: string;
   category_name: string;
   product_id: string;
+  is_add_category: boolean;
 }
 
 interface ADMProviderParams {
@@ -16,9 +17,11 @@ interface ADMProviderParams {
     product_list: any[];
   };
   action: {
+    handle_delete_product(product_id:string,jwt:string ): Promise<void>
     getAllClients(twt: string): Promise<void>;
     setCurrentPage(page: string): void;
     getAllProducts(): Promise<void>;
+    handle_reset_categories(product_id:string): Promise<void>
     set_category_product(params: set_category_product_props): Promise<void>;
   };
 }
@@ -45,14 +48,54 @@ export const ADMProvider = create<ADMProviderParams>((set, get) => ({
     show_edit_product_painel: false,
   },
   action: {
-    set_category_product: async ({ category_name, jwt, product_id }) => {
+    async handle_delete_product(product_id: string, jwt:string): Promise<void> {
+      try {
+        await api.delete(`/product`,{
+          data: {
+            products_ids: [product_id]
+          },
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+      } catch (error:any) {
+        updatedState(set)({
+          error: error.response.data
+        })
+      }
+    },
+    async handle_reset_categories(product_id: string): Promise<void> {
+      updatedState(set)({
+        loading: true
+      })
+      try {
+        await api.delete(`/product-categories/${product_id}`);
+      } catch (error) {
+        updatedState(set)({
+          error
+        })
+      } finally {
+        setTimeout(()=>{
+          updatedState(set)({
+            loading: false
+          })
+        },500)
+
+      }
+    },
+    set_category_product: async ({
+      category_name,
+      jwt,
+      product_id,
+      is_add_category,
+    }) => {
       updatedState(set)({
         loading: true,
       });
       try {
         await api.patch<[]>(
           '/product',
-          { category_name, product_id },
+          { category_name, product_id, is_add_category },
           {
             headers: {
               Authorization: `Bearer ${jwt}`,
@@ -62,8 +105,6 @@ export const ADMProvider = create<ADMProviderParams>((set, get) => ({
 
         return;
       } catch (error: any) {
-        console.log(error);
-
         updatedState(set)({
           error,
         });
@@ -114,6 +155,7 @@ export const ADMProvider = create<ADMProviderParams>((set, get) => ({
         updatedState(set)({
           product_list: data,
         });
+
         return;
       } catch (error: any) {
         updatedState(set)({

@@ -8,11 +8,11 @@ import { ProductCard } from './ProductCard';
 export const ProductsList = () => {
   const {
     action: { getAllProducts },
-    states: { product_list, loading },
+    states: { product_list },
   } = ADMProvider();
+
   const {
     action: { getAllCatagories },
-    states: { category_list },
   } = CategoryProvider();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const ProductsList = () => {
 
   return (
     <>
-      <div className="grid max-h-[420px] max-w-[700px] grid-cols-3 content-stretch  gap-3 overflow-auto">
+      <div className="grid grid-cols-3 content-stretch gap-1 overflow-auto">
         {product_list.map((product) => {
           return (
             <ProductCard

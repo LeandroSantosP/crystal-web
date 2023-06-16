@@ -3,7 +3,6 @@
 import { PopOverCustom } from '@/components/PopOver';
 import { Crown } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
 import { UserCredentials } from './ListClient';
 
 interface ListItemProps {

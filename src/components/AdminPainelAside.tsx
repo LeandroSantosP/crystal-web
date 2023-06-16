@@ -17,7 +17,7 @@ export const AdminPainelAside = () => {
   ];
 
   return (
-    <aside className="max-w flex max-w-[170px] grow-[1] flex-col gap-2 rounded-md bg-zinc-400/20 p-1 ">
+    <aside className="flex w-full max-w-[170px] grow-[1] flex-col gap-2 rounded-md bg-zinc-400/20 p-1 ">
       <MySelect options={options} callback={setCurrentPage} />
       <CreateProductModal>
         <ButtonAdm>Cadastro de Produto</ButtonAdm>

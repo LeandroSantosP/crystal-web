@@ -1,9 +1,13 @@
-import { TranslationCategories } from '@/lib/TranslateCategories';
-import { Edit, PlusSquare, Star } from 'lucide-react';
 import Image from 'next/image';
+
+import { TranslationCategories } from '@/lib/TranslateCategories';
+import { Edit, PlusSquare } from 'lucide-react';
 import { ProductCardProps } from './Categories/Categories';
 import { EditProductModal } from './modal/EditProductModal';
-
+import { ConfirmeDeleteProductModal } from "@/components/modal/ConfirmeDeleteProductModal";
+import { StarNote } from "@/components/StartNote";
+import Cookies from "js-cookie";
+import decode from "jwt-decode";
 export const ProductCard = ({
   product,
   adm = false,
@@ -11,35 +15,45 @@ export const ProductCard = ({
   product: ProductCardProps;
   adm?: boolean;
 }) => {
+    const jwt = Cookies.get('token');
+
+    let client_credentials;
+
+    if (jwt) {
+        client_credentials =  decode(jwt) as {roles: string[]};
+    }
+
   const number_format = product.price.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
-
   if (product.categories) {
-    const category_data = TranslationCategories(product.categories);
-    product.categories = category_data;
+    product.categories = TranslationCategories(product.categories);
   }
-
   return (
-    <div className="flex h-[200px] w-full flex-col items-center rounded-lg bg-zinc-800 text-sm">
+    <div className="flex h-[200px] relative w-full flex-col items-center rounded-lg bg-zinc-800 text-sm">
       {product.images_paths[0] && (
         <Image
           src={product.images_paths[0]}
-          alt="mac"
+          alt="Imagem do produto"
           quality={100}
           width={300}
           height={300}
           className="aspect-video max-h-32 rounded-t-lg object-cover"
         />
       )}
+        {
+            client_credentials?.roles.includes("admin") && (
+                <ConfirmeDeleteProductModal
+                    product_id={product.id}
+                    product_name={product.name}
+                />
+            )
+        }
       <div className="flex w-full grow items-center justify-between px-2">
         <h1>{product.name}</h1>
         <div className="flex items-center gap-1">
-          <Star size={10} />
-          <Star size={10} />
-          <Star size={10} />
-          <Star size={10} />
+          <StarNote note={Number(product.calc_average_ratings)} />
           <span className="bold leading-relaxed">
             {product.calc_average_ratings}
           </span>
