@@ -1,5 +1,5 @@
 import { api } from '@/lib/api';
-import { Cpu, Dumbbell, LayoutList } from 'lucide-react';
+import { Cpu, Dumbbell, LayoutList, Box } from 'lucide-react';
 import { Fragment } from 'react';
 import { ProductDivider } from '../Divider';
 import { ProductCard } from '../ProductCard';
@@ -10,7 +10,6 @@ interface Category {
   description: string;
   subCategories: [];
 }
-[];
 
 export interface ProductCardProps {
   id: string;
@@ -41,8 +40,8 @@ export default async function Categories() {
             },
           }
         );
-        type ObjType = { [key: string]: any };
 
+        type ObjType = { [key: string]: any };
         const category_infos: ObjType = {
           names: {
             ['Unknown']: 'Desconhecida',
@@ -55,14 +54,12 @@ export default async function Categories() {
             ['Sport']: <Dumbbell />,
           },
         };
-
         if (products.length === 0) return;
-
         return (
           <Fragment key={category.id}>
             <ProductDivider
-              content={category_infos['names'][category.name]}
-              Icon={category_infos['icons'][category.name]}
+              content={category_infos['names'][category.name] || category.name}
+              Icon={category_infos['icons'][category.name] || <Box />}
             />
             <div className="grid max-h-[200px] w-full grid-cols-5 content-stretch gap-4 overflow-auto">
               {products.map((product) => (

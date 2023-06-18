@@ -1,7 +1,7 @@
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
-import {FormEvent, ReactNode} from 'react';
+import { FormEvent, ReactNode } from 'react';
 import { ButtonAdm } from '../Buttons/ButtonAdm';
 import * as Dialog from '@radix-ui/react-dialog';
 import { CheckCheck, Trash2 } from 'lucide-react';
@@ -16,7 +16,7 @@ import { ProductCardProps } from '../Categories/Categories';
 import { ADMProvider } from '@/shared/storage';
 import { CategoryProvider } from '@/shared/storage/Categories/CategoryProvider';
 import Cookie from 'js-cookie';
-import { RadixCloseButton } from "@/components/RadixCloseButton";
+import { RadixCloseButton } from '@/components/RadixCloseButton';
 
 interface EditProductModalProps {
   children: ReactNode;
@@ -29,7 +29,6 @@ export const EditProductModal = ({
   product,
   categories_names,
 }: EditProductModalProps) => {
-
   const jwt = Cookie.get('token');
 
   const {
@@ -54,7 +53,8 @@ export const EditProductModal = ({
   });
 
   const notify = () => toast.success('Produto editando com sucesso!');
-  const notify_delete_categories = () => ResetCategories.toast.success('Categorias Resetadas com sucesso!');
+  const notify_delete_categories = () =>
+    ResetCategories.toast.success('Categorias Resetadas com sucesso!');
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -78,15 +78,15 @@ export const EditProductModal = ({
     }
 
     notify();
-    await getAllProducts()
+    await getAllProducts();
     await getAllCatagories();
   };
 
   const reset_categories = async () => {
     await handle_reset_categories(product.id);
-    await getAllProducts()
-    notify_delete_categories()
-  }
+    await getAllProducts();
+    notify_delete_categories();
+  };
 
   return (
     <>
@@ -119,19 +119,23 @@ export const EditProductModal = ({
                 />
                 <fieldset className="flex flex-col gap-1 rounded-md bg-zinc-700 p-2">
                   <div className="flex flex-col">
-
-                  <label className="text-start text-[15px]" htmlFor="name">
-                    Categorias Cadastrada
-                  </label>
-
+                    <label className="text-start text-[15px]" htmlFor="name">
+                      Categorias Cadastrada
+                    </label>
 
                     <div className="flex max-h-20  w-[420px] gap-2">
-                      <div className="flex overflow-auto grow-[1] gap-1 rounded-md bg-emerald-500 p-2">
+                      <div className="flex grow-[1] gap-1 overflow-auto rounded-md bg-emerald-500 p-2">
                         {categories_names.map(({ name }) => {
                           return <CategoryADMCard key={name} content={name} />;
                         })}
                       </div>
-                      <button className="bg-blackA9 rounded-md p-1" type="button" onClick={reset_categories}>Resetar</button>
+                      <button
+                        className="rounded-md bg-blackA9 p-1"
+                        type="button"
+                        onClick={reset_categories}
+                      >
+                        Resetar
+                      </button>
                     </div>
                   </div>
 
