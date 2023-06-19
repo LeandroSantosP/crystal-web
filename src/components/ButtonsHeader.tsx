@@ -16,8 +16,8 @@ export const ButtonsHeader = ({ roles }: { roles: string[] | undefined }) => {
           Admin
         </CustomLink>
       )}
-      <CustomLink href="/" active={currentPage === '/collection'}>
-        collection
+      <CustomLink href="/categories" active={currentPage === '/collection'}>
+        categories
       </CustomLink>
       <CustomLink href="/" active={currentPage === '/contact'}>
         contact

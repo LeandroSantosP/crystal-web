@@ -1,9 +1,5 @@
 'use client';
 
-import { HTMLAttributes } from 'react';
-
-interface PlaceHolderProductCardProps extends HTMLAttributes<HTMLDivElement> {}
-
 export const PlaceHolderProductCard = (params: { product_id: string }) => (
   <a
     href={`/product-details/${params.product_id}`}

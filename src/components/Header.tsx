@@ -25,10 +25,13 @@ export const Header = () => {
           className="border-1 h-14 rounded-lg border-gray-100 bg-gray-400 leading-relaxed text-gray-800"
         />
       </div>
-      <button className="flex h-14 w-48 items-center justify-center gap-2 rounded-lg bg-emerald-600 text-white">
+      <a
+        className="flex h-14 w-48 cursor-pointer items-center justify-center gap-2 rounded-lg bg-emerald-600 text-white"
+        href="/card"
+      >
         <ShoppingCart />
         VIEW CART
-      </button>
+      </a>
       {isAuthenticated ? <Profile /> : <SingIn />}
     </header>
   );

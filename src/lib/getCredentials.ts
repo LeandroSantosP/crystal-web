@@ -9,7 +9,6 @@ interface User {
 }
 
 export function getCredentials() {
-
   const token = cookies().get('token')?.value;
 
   if (!token) {

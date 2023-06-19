@@ -25,7 +25,7 @@ export const PopOverCustom = ({
               className="rounded-full"
             />
           </div>
-          <div className="flex grow-[4]"></div>
+
           <Popover.Close />
           <Popover.Arrow className="fill-gray-800" />
         </Popover.Content>

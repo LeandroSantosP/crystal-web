@@ -56,7 +56,7 @@ export const ProductCard = ({
         <div className="flex w-full grow items-center justify-between px-2">
           <h1>{product.name}</h1>
           <div className="flex items-center gap-1">
-            <StarNote note={Number(product.calc_average_ratings)} />
+            <StarNote note={Number(product.calc_average_ratings)} gap={1} />
             <span className="bold leading-relaxed">
               {product.calc_average_ratings}
             </span>

@@ -15,6 +15,7 @@ interface StartNoteProps {
   star_size?: number;
   full?: boolean;
   custom_color?: string;
+  gap?: number;
 }
 
 export const StarNote = ({
@@ -22,16 +23,17 @@ export const StarNote = ({
   star_size = 10,
   full = true,
   custom_color,
+  gap = 2,
 }: StartNoteProps) => {
   let node_color = 'text-yellow-500 fill-yellow-500';
 
   return (
-    <>
+    <div className={`flex gap-${gap}`}>
       {Array.from({ length: 5 }).map((_, max_note) => {
         return (
           <SingleStar
-            star_size={star_size}
             key={max_note}
+            star_size={star_size}
             note_color={custom_color || node_color}
             max_note={max_note}
             note={note}
@@ -39,7 +41,7 @@ export const StarNote = ({
           />
         );
       })}
-    </>
+    </div>
   );
 };
 const SingleStar = ({

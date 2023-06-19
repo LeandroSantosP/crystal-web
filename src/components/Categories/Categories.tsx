@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import { ProductDivider } from '../Divider';
 import { ProductCard } from '../ProductCard';
 
-interface Category {
+export interface Category {
   id: string;
   name: string;
   description: string;
@@ -24,24 +24,30 @@ export interface ProductCardProps {
   categories: any[];
 }
 
+async function get_products_by_category_id(category_id: string) {
+  const { data: products } = await api.get<ProductCardProps[]>(
+    '/product/by-category',
+    {
+      params: {
+        category_id,
+        page: 1,
+        per_page: 10,
+      },
+    }
+  );
+  return products;
+}
+
 export default async function Categories() {
   const { data: categories } = await api.get<Category[]>('/category');
 
   return (
     <>
       {categories.map(async (category) => {
-        const { data: products } = await api.get<ProductCardProps[]>(
-          '/product/by-category',
-          {
-            params: {
-              category_id: category.id,
-              page: 1,
-              per_page: 10,
-            },
-          }
-        );
+        const products = await get_products_by_category_id(category.id);
 
         type ObjType = { [key: string]: any };
+
         const category_infos: ObjType = {
           names: {
             ['Unknown']: 'Desconhecida',
@@ -54,7 +60,9 @@ export default async function Categories() {
             ['Sport']: <Dumbbell />,
           },
         };
-        if (products.length === 0) return;
+
+        if (products.length === 0 || products.length <= 2) return;
+
         return (
           <Fragment key={category.id}>
             <ProductDivider

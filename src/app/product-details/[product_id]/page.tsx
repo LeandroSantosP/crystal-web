@@ -30,11 +30,12 @@ export default function ProductDetails({
             </h1>
             <span className="text-3xl text-white">Edicao epecial!</span>
           </div>
-          <div className="justify-centerc flex items-center gap-1">
+          <div className="justify-centerc flex items-center">
             <StarNote
               custom_color="text-emerald-500 fill-emerald-500"
               note={2}
               star_size={30}
+              gap={1}
             />
             <span className="ml-2 text-2xl text-white">2 / 5</span>
           </div>
