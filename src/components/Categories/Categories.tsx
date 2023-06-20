@@ -15,7 +15,9 @@ export interface ProductCardProps {
   id: string;
   stoke: number;
   name: string;
+  images: string[];
   images_paths: string[];
+  description: string;
   product_name: string;
   price: number;
   available: boolean;

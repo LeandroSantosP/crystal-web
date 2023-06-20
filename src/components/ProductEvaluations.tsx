@@ -11,16 +11,17 @@ export const ProductEvaluations = () => {
   };
 
   return (
-    <>
+    <div className=" overflow-auto">
       <ProductDivider
         clickable
         Icon={<ScrollText />}
         content={'Avaliacoees'}
         handle_show={handle_show}
       />
-      {!show && <div className="flex max-h-full min-h-[200px] w-full grow" />}
+      {!show && <div className="flex min-h-[200px] w-full grow" />}
       {show && <Evaluation />}
       {show && <Evaluation />}
-    </>
+      {show && <Evaluation />}
+    </div>
   );
 };

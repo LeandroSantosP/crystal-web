@@ -19,10 +19,7 @@ import Cookies from 'js-cookie';
 const form_data_schema = z.object({
   name: z.string().nonempty('Campo Obrigatório'),
   description: z.string().refine((value) => {
-    if (value.length < 20) {
-      return false;
-    }
-    return true;
+    return value.length >= 20;
   }, 'Descrição deve conter no minemo 20 caracteres'),
 });
 

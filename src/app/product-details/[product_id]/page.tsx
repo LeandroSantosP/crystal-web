@@ -1,5 +1,5 @@
-import ImageTest from '../../../assets/macbook.jpeg';
 import Image from 'next/image';
+import ImageTest from '../../../assets/macbook.jpeg';
 import { StarNote } from '@/components/StartNote';
 
 import { ProductEvaluations } from '@/components/ProductEvaluations';
@@ -11,8 +11,7 @@ export default function ProductDetails({
   params: { product_id: string };
 }) {
   return (
-    <main className="flex h-auto flex-col gap-3 bg-gray-500 p-2">
-      <p>{params.product_id}</p>
+    <main className="flex h-full flex-col gap-3 overflow-hidden bg-gray-700 p-2">
       <div className="flex gap-7">
         <div className="flex items-center justify-center rounded-md bg-gray-700 p-2">
           <Image
@@ -25,9 +24,7 @@ export default function ProductDetails({
         </div>
         <div className="flex h-[424px] w-[541px] flex-col gap-4">
           <div>
-            <h1 className="text text-6xl font-semibold text-gray-900">
-              Mac Book
-            </h1>
+            <h1 className="text-6xl font-semibold text-white">Mac Book</h1>
             <span className="text-3xl text-white">Edicao epecial!</span>
           </div>
           <div className="justify-centerc flex items-center">

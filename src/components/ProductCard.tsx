@@ -8,6 +8,7 @@ import { ConfirmeDeleteProductModal } from '@/components/modal/ConfirmeDeletePro
 import { StarNote } from '@/components/StartNote';
 import Cookies from 'js-cookie';
 import decode from 'jwt-decode';
+import { toMoney } from 'vanilla-masker';
 import { AddCardButton } from '@/components/Buttons/AddCardButton';
 import { PlaceHolderProductCard } from '@/components/PlaceHolderProductCard';
 export const ProductCard = ({
@@ -25,9 +26,8 @@ export const ProductCard = ({
     client_credentials = decode(jwt) as { roles: string[] };
   }
 
-  const number_format = product.price.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+  const number_format = toMoney(Number(product.price).toFixed(2), {
+    unit: 'R$',
   });
   if (product.categories) {
     product.categories = TranslationCategories(product.categories);
@@ -36,7 +36,6 @@ export const ProductCard = ({
     <>
       <div className="relative flex h-[200px] w-full flex-col items-center rounded-lg bg-zinc-800 text-sm">
         <PlaceHolderProductCard product_id={product.id} />
-
         {product.images_paths[0] && (
           <Image
             src={product.images_paths[0]}
@@ -64,7 +63,7 @@ export const ProductCard = ({
         </div>
         <div className="flex w-full grow items-center justify-between px-2">
           <span className="font-thin leading-relaxed text-emerald-200">
-            $ {number_format}
+            {number_format}
           </span>
           {!adm ? (
             <AddCardButton product_id={product.id} />

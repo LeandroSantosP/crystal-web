@@ -1,23 +1,15 @@
 import { create, SetState } from 'zustand';
-import { api } from '@/lib/api';
 
-interface set_category_product_props {
-  jwt: string;
-  category_name: string;
-  product_id: string;
-  is_add_category: boolean;
-}
-
-type products_items = Array<{ id: string; quantity: number }>;
-
+export type products_items = Array<{ id: string; quantity: number }>;
+export type card_type = {
+  client_id?: string;
+  order_date?: string;
+  freight_type?: string;
+  products: products_items;
+};
 interface CardProviderParams {
   states: {
-    card: {
-      client_id?: string;
-      order_date?: string;
-      freight_type?: string;
-      products: products_items;
-    };
+    card: card_type;
   };
   action: {
     add_item(input: { id: string; quantity: number }): void;
@@ -40,7 +32,7 @@ const updatedState =
 
 let items = localStorage.getItem('card_item') as any;
 
-export const CardProvider = create<CardProviderParams>((set, get) => ({
+export const CardProvider = create<CardProviderParams>((set) => ({
   states: {
     card: {
       products: JSON.parse(items),
@@ -66,9 +58,12 @@ export const CardProvider = create<CardProviderParams>((set, get) => ({
       }
 
       localStorage.setItem('card_item', JSON.stringify(items));
-      updatedState(set)({
-        card: {
-          products: items,
+
+      set({
+        states: {
+          card: {
+            products: items,
+          },
         },
       });
     },

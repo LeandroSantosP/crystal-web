@@ -2,7 +2,7 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from 'react-hook-form';
-import {ChangeEvent, ReactNode, useEffect, useState} from 'react';
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import { ButtonAdm } from '../Buttons/ButtonAdm';
 import { toMoney, toNumber } from 'vanilla-masker';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -15,32 +15,22 @@ import { api } from '@/lib/api';
 import { ToastHook } from '../Toast';
 import { ErrorMessage } from '../ErrorMessage';
 import { LoadingForm } from '../LoadingForm';
-import {RadixCloseButton} from "@/components/RadixCloseButton";
-
-function FormaToDecimalToMoney(value: string) {
-  const number = parseFloat(
-    value.replace('R$ ', '').replace('.', '').replace(',', '.')
-  ).toFixed(2);
-
-  return Number(number);
-}
-
+import { RadixCloseButton } from '@/components/RadixCloseButton';
+import { FormatToDecimalToMoney } from '@/lib/FormaterToDecimal';
 
 const form_data_schema = z.object({
   name: z.string().nonempty('Campo Obrigatório'),
   description: z.string().refine((value) => {
     return value.length >= 20;
-
   }, 'Descrição deve conter no minemo 20 caracteres'),
   price: z
     .string()
     .nonempty('Campo Obrigatório')
     .refine((value) => {
       return value !== 'R$ 0,00';
-
     }, 'Valor R$ 0,00 não e valido!')
     .transform((value) => {
-      return FormaToDecimalToMoney(value);
+      return FormatToDecimalToMoney(value);
     }),
   stoke: z
     .string()
@@ -50,27 +40,35 @@ const form_data_schema = z.object({
       return amount >= 10;
     }, 'Quantidade minima de 10')
     .transform((value) => Number(value)),
-  weight: z.string().nonempty("Campo Obrigatório").transform((value) => {
-    return parseInt(value);
-  }),
-  length: z.string().nonempty("Campo Obrigatório").transform((value) => {
-    return parseInt(value);
-  }),
-  width: z.string().nonempty("Campo Obrigatório").transform((value) => {
-    return parseInt(value);
-  }),
-  height: z.string().nonempty("Campo Obrigatório").transform((value) => {
-    return parseInt(value);
-  }),
+  weight: z
+    .string()
+    .nonempty('Campo Obrigatório')
+    .transform((value) => {
+      return parseInt(value);
+    }),
+  length: z
+    .string()
+    .nonempty('Campo Obrigatório')
+    .transform((value) => {
+      return parseInt(value);
+    }),
+  width: z
+    .string()
+    .nonempty('Campo Obrigatório')
+    .transform((value) => {
+      return parseInt(value);
+    }),
+  height: z
+    .string()
+    .nonempty('Campo Obrigatório')
+    .transform((value) => {
+      return parseInt(value);
+    }),
 });
 
 type form_product_data = z.infer<typeof form_data_schema>;
 
-export const CreateProductModal = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+export const CreateProductModal = ({ children }: { children: ReactNode }) => {
   const jwt = Cookies.get('token');
   const {
     register,
@@ -108,7 +106,7 @@ export const CreateProductModal = ({
       width: (value: string) => toNumber(value),
       weight: (value: string) => toNumber(value),
       length: (value: string) => toNumber(value),
-    } as { [key:string]: any }
+    } as { [key: string]: any };
 
     const { name, value } = e.target;
 
@@ -255,9 +253,6 @@ export const CreateProductModal = ({
               )}
             </fieldset>
 
-
-
-
             <fieldset className="relative flex w-full flex-col gap-1 pb-[20px] text-red-400">
               <label className="text-start text-[15px]" htmlFor="price">
                 Preço
@@ -302,82 +297,102 @@ export const CreateProductModal = ({
             </fieldset>
 
             <fieldset className="relative  flex w-full flex-col gap-1 pb-[20px] text-red-400">
-              <label className="text-start text-emerald-400 leading-relaxed text-[15px]" htmlFor="description">
+              <label
+                className="text-start text-[15px] leading-relaxed text-emerald-400"
+                htmlFor="description"
+              >
                 Specificacoes do produto!
               </label>
 
-              <div className="flex gap-2 text-emerald-400 w-full overflow-hidden">
-                <div className="flex gap-2 max-w-[100px] flex-col justify-center">
-                  <label className="text-xs font-medium text-white" htmlFor="weight">
+              <div className="flex w-full gap-2 overflow-hidden text-emerald-400">
+                <div className="flex max-w-[100px] flex-col justify-center gap-2">
+                  <label
+                    className="text-xs font-medium text-white"
+                    htmlFor="weight"
+                  >
                     Peso (Kg)
                   </label>
                   <input
-                      {...register("weight")}
-                      onChange={(e) => handleChange(e)}
-                      value={value.weight}
-                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
-                      id="weight"
-                      type="text"
+                    {...register('weight')}
+                    onChange={(e) => handleChange(e)}
+                    value={value.weight}
+                    className="selection:color-white inline-flex h-[35px] appearance-none items-center  justify-center rounded-[4px] bg-blackA5 px-[10px] text-[15px] text-emerald-400 shadow-[0_0_0_1px] shadow-blackA9 outline-none selection:bg-blackA9 focus:shadow-[0_0_0_2px_black]"
+                    id="weight"
+                    type="text"
                   />
                   {errors.weight?.message ? (
-                      <ErrorMessage xs>{errors.weight?.message}</ErrorMessage>
+                    <ErrorMessage xs>{errors.weight?.message}</ErrorMessage>
                   ) : (
-                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                    <p className="absolute bottom-[-1px] text-sm text-blue-500" />
                   )}
                 </div>
-                <div className="flex gap-2  max-w-[110px] flex-col justify-center">
-                  <label className="text-xs font-medium text-white" htmlFor="length">
+                <div className="flex max-w-[110px]  flex-col justify-center gap-2">
+                  <label
+                    className="text-xs font-medium text-white"
+                    htmlFor="length"
+                  >
                     Comprimento (Cm)
                   </label>
                   <input
-                      {...register("length")}
-                      onChange={(e) => handleChange(e)}
-                      value={value.length}
-                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
-                      id="length"
-                      type="text"
+                    {...register('length')}
+                    onChange={(e) => handleChange(e)}
+                    value={value.length}
+                    className="selection:color-white inline-flex h-[35px] appearance-none items-center  justify-center rounded-[4px] bg-blackA5 px-[10px] text-[15px] text-emerald-400 shadow-[0_0_0_1px] shadow-blackA9 outline-none selection:bg-blackA9 focus:shadow-[0_0_0_2px_black]"
+                    id="length"
+                    type="text"
                   />
                   {errors.length?.message ? (
-                      <ErrorMessage xs={true}>{errors.length?.message}</ErrorMessage>
+                    <ErrorMessage xs={true}>
+                      {errors.length?.message}
+                    </ErrorMessage>
                   ) : (
-                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                    <p className="absolute bottom-[-1px] text-sm text-blue-500" />
                   )}
                 </div>
-                <div className="flex gap-2  max-w-[100px] flex-col justify-center">
-                  <label className="text-xs font-medium text-white" htmlFor="width">
+                <div className="flex max-w-[100px]  flex-col justify-center gap-2">
+                  <label
+                    className="text-xs font-medium text-white"
+                    htmlFor="width"
+                  >
                     Largura (Cm)
                   </label>
                   <input
-                      {...register("width")}
-                      onChange={(e) => handleChange(e)}
-                      value={value.width}
-                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
-                      type="text"
-                      id="width"
+                    {...register('width')}
+                    onChange={(e) => handleChange(e)}
+                    value={value.width}
+                    className="selection:color-white inline-flex h-[35px] appearance-none items-center  justify-center rounded-[4px] bg-blackA5 px-[10px] text-[15px] text-emerald-400 shadow-[0_0_0_1px] shadow-blackA9 outline-none selection:bg-blackA9 focus:shadow-[0_0_0_2px_black]"
+                    type="text"
+                    id="width"
                   />
                   {errors.width?.message ? (
-                      <ErrorMessage xs={true}>{errors.width?.message}</ErrorMessage>
+                    <ErrorMessage xs={true}>
+                      {errors.width?.message}
+                    </ErrorMessage>
                   ) : (
-                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                    <p className="absolute bottom-[-1px] text-sm text-blue-500" />
                   )}
                 </div>
-                <div className="flex gap-2  max-w-[110px] flex-col justify-center">
-
-                  <label className="text-xs w-full font-medium text-white" htmlFor="height">
+                <div className="flex max-w-[110px]  flex-col justify-center gap-2">
+                  <label
+                    className="w-full text-xs font-medium text-white"
+                    htmlFor="height"
+                  >
                     Altura (Cm)
                   </label>
                   <input
-                      {...register("height")}
-                      onChange={(e) => handleChange(e)}
-                      value={value.height}
-                      className="bg-blackA5 text-emerald-400 shadow-blackA9 inline-flex h-[35px]  appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA9"
-                      type="text"
-                      id="height"
+                    {...register('height')}
+                    onChange={(e) => handleChange(e)}
+                    value={value.height}
+                    className="selection:color-white inline-flex h-[35px] appearance-none items-center  justify-center rounded-[4px] bg-blackA5 px-[10px] text-[15px] text-emerald-400 shadow-[0_0_0_1px] shadow-blackA9 outline-none selection:bg-blackA9 focus:shadow-[0_0_0_2px_black]"
+                    type="text"
+                    id="height"
                   />
                   {errors.height?.message ? (
-                      <ErrorMessage xs={true}>{errors.height?.message}</ErrorMessage>
+                    <ErrorMessage xs={true}>
+                      {errors.height?.message}
+                    </ErrorMessage>
                   ) : (
-                      <p className="absolute bottom-[-1px] text-sm text-blue-500" />
+                    <p className="absolute bottom-[-1px] text-sm text-blue-500" />
                   )}
                 </div>
               </div>
@@ -402,11 +417,10 @@ export const CreateProductModal = ({
               )}
             </fieldset>
 
-
             <ButtonAdm type="submit" my_color="green">
               Criar Produto
             </ButtonAdm>
-            <RadixCloseButton/>
+            <RadixCloseButton />
           </form>
           {previewFile && (
             // eslint-disable-next-line

@@ -1,5 +1,6 @@
 import { create, SetState } from 'zustand';
 import { api } from '@/lib/api';
+import { ProductCardProps } from '@/components/Categories/Categories';
 
 interface set_category_product_props {
   jwt: string;
@@ -14,14 +15,14 @@ interface ADMProviderParams {
     error: any | null;
     loading: boolean;
     current_page: string | null;
-    product_list: any[];
+    product_list: ProductCardProps[];
   };
   action: {
-    handle_delete_product(product_id:string,jwt:string ): Promise<void>
+    handle_delete_product(product_id: string, jwt: string): Promise<void>;
     getAllClients(twt: string): Promise<void>;
     setCurrentPage(page: string): void;
     getAllProducts(): Promise<void>;
-    handle_reset_categories(product_id:string): Promise<void>
+    handle_reset_categories(product_id: string): Promise<void>;
     set_category_product(params: set_category_product_props): Promise<void>;
   };
 }
@@ -48,39 +49,41 @@ export const ADMProvider = create<ADMProviderParams>((set, get) => ({
     show_edit_product_painel: false,
   },
   action: {
-    async handle_delete_product(product_id: string, jwt:string): Promise<void> {
+    async handle_delete_product(
+      product_id: string,
+      jwt: string
+    ): Promise<void> {
       try {
-        await api.delete(`/product`,{
+        await api.delete(`/product`, {
           data: {
-            products_ids: [product_id]
+            products_ids: [product_id],
           },
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
         });
-      } catch (error:any) {
+      } catch (error: any) {
         updatedState(set)({
-          error: error.response.data
-        })
+          error: error.response.data,
+        });
       }
     },
     async handle_reset_categories(product_id: string): Promise<void> {
       updatedState(set)({
-        loading: true
-      })
+        loading: true,
+      });
       try {
         await api.delete(`/product-categories/${product_id}`);
       } catch (error) {
         updatedState(set)({
-          error
-        })
+          error,
+        });
       } finally {
-        setTimeout(()=>{
+        setTimeout(() => {
           updatedState(set)({
-            loading: false
-          })
-        },500)
-
+            loading: false,
+          });
+        }, 500);
       }
     },
     set_category_product: async ({

@@ -27,6 +27,7 @@ export const ProductsList = () => {
           return (
             <ProductCard
               product={{
+                // @ts-ignore
                 images_paths: product.images,
                 ...product,
               }}

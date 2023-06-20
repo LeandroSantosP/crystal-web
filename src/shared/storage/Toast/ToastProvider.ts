@@ -2,7 +2,6 @@ import { create, SetState } from 'zustand';
 import { ToastHook, ToastProp } from '@/components/Toast';
 import React from 'react';
 import { toast } from 'react-toastify';
-import { X } from 'lucide-react';
 
 const updatedState =
   (set: SetState<CategoryProviderParams>) =>

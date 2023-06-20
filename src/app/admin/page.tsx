@@ -20,7 +20,7 @@ export default async function Admin() {
   return (
     <>
       {result?.roles.includes('admin') && (
-        <section className="flex h-full flex-col gap-3 text-gray-800">
+        <section className="flex h-full flex-col gap-3 overflow-hidden text-gray-800">
           <section className="flex h-40 w-full gap-3">
             <InfoCard
               Logo={Order}
@@ -50,7 +50,7 @@ export default async function Admin() {
               title="Total Orders"
             />
           </section>
-          <section className="flex w-full flex-1 items-center gap-3 text-gray-100">
+          <section className="flex  w-full flex-1 items-center gap-3 overflow-hidden text-gray-100">
             <div className="flex h-full grow-[5] justify-center gap-1 rounded-md bg-teal-950 p-2">
               <AdminPanel />
               <AdminPainelAside />
