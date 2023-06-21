@@ -20,7 +20,7 @@ export const OrderModal = ({ children }: { children: ReactNode }) => {
             <Dialog.Title className="m-0 text-[37px] font-medium text-emerald-400">
               CheckOut
             </Dialog.Title>
-            <div className="grid  grid-cols-2 gap-10">
+            <div className="grid grid-cols-2 gap-10">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                   <h1 className="text-xl font-semibold tracking-wider text-white">
@@ -30,7 +30,7 @@ export const OrderModal = ({ children }: { children: ReactNode }) => {
                     todos seus dispositivos com nossos para celular.
                   </span>
                 </div>
-                <div className="flex h-20 w-full items-center gap-5 rounded-xl bg-blackA10 p-3">
+                <div className="flex h-20 w-full items-center gap-5 rounded-xl bg-gray-900 p-3">
                   <CheckBox
                     id={'ideia'}
                     name={'ideia'}
@@ -45,7 +45,7 @@ export const OrderModal = ({ children }: { children: ReactNode }) => {
                     </span>
                   </div>
                 </div>
-                <div className="flex h-52 w-full flex-col gap-5 rounded-xl bg-blackA10 p-3">
+                <div className="flex h-52 w-full flex-col gap-5 rounded-xl bg-gray-900 p-3">
                   <div className="flex w-full items-center gap-3">
                     <input
                       className="h-4 w-4 rounded border-gray-400 bg-gray-700 text-emerald-500"
@@ -56,7 +56,7 @@ export const OrderModal = ({ children }: { children: ReactNode }) => {
 
                   <div className="flex h-full w-full flex-col items-end gap-5">
                     <input
-                      className="selection:color-white flex h-[35px] w-[300px] appearance-none items-center justify-center rounded-[4px] border-none bg-blackA5 p-6 px-[10px] text-[15px] text-emerald-400 shadow-[0_0_0_1px] shadow-blackA9 outline-none selection:bg-blackA9 focus:border-sky-500 focus:ring-0"
+                      className="selection:color-white flex h-[35px] w-[300px]  appearance-none items-center justify-center rounded-[4px] border-none bg-blackA5 p-6 px-[10px] text-[15px] text-emerald-400 shadow-[0_0_0_1px] shadow-blackA9 outline-none selection:bg-blackA9 focus:border-sky-500 focus:ring-0"
                       type="text"
                       id="width"
                       placeholder="8880 9992 9897 8978"
@@ -87,8 +87,13 @@ export const OrderModal = ({ children }: { children: ReactNode }) => {
               </div>
             </div>
             <div className="flex h-full ">
-              <div className="se flex h-20 w-full items-center self-end rounded-xl bg-blackA10">
-                test
+              <div className="flex h-20 w-full items-center justify-between gap-32 self-end rounded-xl p-2">
+                <button className="h-14 w-36 rounded bg-gray-900">
+                  Pay R$ 1000
+                </button>
+                <button className="h-14 w-36 rounded bg-gray-900">
+                  Pay R$ 1000
+                </button>
               </div>
             </div>
           </form>

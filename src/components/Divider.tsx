@@ -5,7 +5,7 @@ type ProductDividerProps = {
   content: string;
   Icon?: ReactNode;
   clickable?: boolean;
-  handle_show?: (show: boolean) => any;
+  handle_show?: (value: any) => void;
 };
 
 export const ProductDivider = ({
@@ -14,20 +14,12 @@ export const ProductDivider = ({
   handle_show,
   clickable = false,
 }: ProductDividerProps) => {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    if (handle_show) {
-      handle_show(show);
-    }
-  }, [handle_show, show]);
-
   return (
     <div
       className={`flex w-full items-center gap-3 px-2 ${
         clickable && 'hover:cursor-pointer hover:text-red-500'
       }`}
-      onClick={() => setShow((prev) => !prev)}
+      onClick={() => handle_show && handle_show((prev: boolean) => !prev)}
     >
       <h2>{content}</h2>
       {Icon && Icon}

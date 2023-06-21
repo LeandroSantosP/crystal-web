@@ -27,6 +27,7 @@ export default function Card() {
   useEffect(() => {
     getAllProducts();
   }, [getAllProducts]);
+
   useEffect(() => {
     const products = [];
     for (const card_product of card.products) {

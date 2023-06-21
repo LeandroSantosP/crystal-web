@@ -6,6 +6,8 @@ import { ProductCardQuantity } from '@/app/card/ProductCardQuantity';
 import { ProductCardProps } from '@/components/Categories/Categories';
 
 export const ProductCard = ({ product }: { product: ProductCardProps }) => {
+  let formatter_label = `Specificacoes do producto: peso ${product.product_specification.weight}Km, largura: ${product.product_specification.width}cm, altura: ${product.product_specification.height}cm, comprimento: ${product.product_specification.length}cm`;
+
   return (
     <div className="flex max-h-4 min-h-[300px] w-full gap-3 rounded  bg-gray-700">
       <div className="flex">
@@ -22,6 +24,7 @@ export const ProductCard = ({ product }: { product: ProductCardProps }) => {
         <ProductCardInfos
           product_name={product.name}
           desc={product.description}
+          label={formatter_label}
         />
         <StarNote
           note={Number(product.calc_average_ratings)}

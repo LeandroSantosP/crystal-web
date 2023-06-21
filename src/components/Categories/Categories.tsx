@@ -3,28 +3,7 @@ import { Cpu, Dumbbell, LayoutList, Box } from 'lucide-react';
 import { Fragment } from 'react';
 import { ProductDivider } from '../Divider';
 import { ProductCard } from '../ProductCard';
-
-export interface Category {
-  id: string;
-  name: string;
-  description: string;
-  subCategories: [];
-}
-
-export interface ProductCardProps {
-  id: string;
-  stoke: number;
-  name: string;
-  images: string[];
-  images_paths: string[];
-  description: string;
-  product_name: string;
-  price: number;
-  available: boolean;
-  calc_average_ratings: number;
-  evaluations: [];
-  categories: any[];
-}
+import { Category, ProductCardProps } from '@/lib/ProductTypes';
 
 async function get_products_by_category_id(category_id: string) {
   const { data: products } = await api.get<ProductCardProps[]>(

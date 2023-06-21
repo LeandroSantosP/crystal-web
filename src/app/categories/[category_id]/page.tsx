@@ -5,17 +5,14 @@ import { ProductCardProps } from '@/components/Categories/Categories';
 import { ProductDivider } from '@/components/Divider';
 import { Box, ArrowBigRightDash, ArrowBigLeftDash } from 'lucide-react';
 import { ProductCard } from '@/components/ProductCard';
-import { useState } from 'react';
-import { ButtonAdm } from '@/components/Buttons/ButtonAdm';
-import { ButtonsHeader } from '@/components/ButtonsHeader';
-import { ButtonToolBar } from '@/components/Buttons/ButtonToolBar';
+import { useEffect, useState } from 'react';
 interface ProductsOfCategoryProps {
   params: {
     category_id: string;
   };
 }
 export default async function ProductsOfCategory({
-  params: { category_id },
+  params,
 }: ProductsOfCategoryProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const handle_next_page = () => {
@@ -25,11 +22,12 @@ export default async function ProductsOfCategory({
     setCurrentPage((prev) => prev - 1);
   };
 
+
   const { data: products } = await api.get<ProductCardProps[]>(
     '/product/by-category',
     {
       params: {
-        category_id,
+        category_id:params?.category_id,
         page: currentPage,
         per_page: 20,
       },
@@ -39,7 +37,7 @@ export default async function ProductsOfCategory({
   const categories = await api.get<any[]>('/category');
 
   const { name: category_name } = categories.data.find(
-    (category) => category.id === category_id
+    (category) => category.id === params?.category_id
   );
 
   return (

@@ -2,7 +2,6 @@ import Image from 'next/image';
 
 import { TranslationCategories } from '@/lib/TranslateCategories';
 import { Edit } from 'lucide-react';
-import { ProductCardProps } from './Categories/Categories';
 import { EditProductModal } from './modal/EditProductModal';
 import { ConfirmeDeleteProductModal } from '@/components/modal/ConfirmeDeleteProductModal';
 import { StarNote } from '@/components/StartNote';
@@ -11,6 +10,7 @@ import decode from 'jwt-decode';
 import { toMoney } from 'vanilla-masker';
 import { AddCardButton } from '@/components/Buttons/AddCardButton';
 import { PlaceHolderProductCard } from '@/components/PlaceHolderProductCard';
+import { ProductCardProps } from '@/lib/ProductTypes';
 export const ProductCard = ({
   product,
   adm = false,
