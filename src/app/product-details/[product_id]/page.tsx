@@ -1,11 +1,9 @@
 import Image from 'next/image';
-import ImageTest from '../../../assets/macbook.jpeg';
 import { StarNote } from '@/components/StartNote';
 
 import { ProductEvaluations } from '@/components/ProductEvaluations';
 import { AddCardButton } from '@/components/Buttons/AddCardButton';
 import { api } from '@/lib/api';
-import { ProductCardProps } from '@/lib/ProductTypes';
 
 export default async function ProductDetails({
   params,

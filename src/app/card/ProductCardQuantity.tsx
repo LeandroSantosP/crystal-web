@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { CardProvider } from '@/shared/storage/Card/CardProvider';
 import { Plus, Minus } from 'lucide-react';
 
-import { ProductCardProps } from '@/components/Categories/Categories';
 import { TrashButton } from '@/components/Buttons/ThashButton';
 import { ToastProvider } from '@/shared/storage';
+import { ProductCardProps } from '@/lib/ProductTypes';
 
 export const ProductCardQuantity = ({
   product,

@@ -1,15 +1,14 @@
 'use client';
-
 import { ProductCard } from '@/app/card/ProdcutCard';
 import Image from 'next/image';
-import { ShoppingCart, Home } from 'lucide-react';
-import { toMoney } from 'vanilla-masker';
+import { Home } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ADMProvider, CardProvider } from '@/shared/storage';
-import { ProductCardProps } from '@/components/Categories/Categories';
 import { card_type } from '@/shared/storage/Card/CardProvider';
 import { PinCount } from '@/components/PinCount';
 import { OrderModal } from '@/components/modal/OrderModal';
+import { ProductCardProps } from '@/lib/ProductTypes';
+import { calculate_total_price } from '@/app/card/CalculateTotalPrice';
 
 //catainer pai tem h-full e overflow-hidden, e o cantainer filho tem h-full e overflow-auto
 
@@ -29,32 +28,19 @@ export default function Card() {
   }, [getAllProducts]);
 
   useEffect(() => {
-    const products = [];
-    for (const card_product of card.products) {
-      const card_product_found = product_list.find(
-        (curr) => curr.id === card_product.id
-      );
-      if (card_product_found) {
-        products.push(card_product_found);
-      }
-    }
-    setProductOnCard(products);
-    calculate_total(products, card);
+    calculate_total(product_list, card);
   }, [card, product_list]);
 
   const calculate_total = (products: ProductCardProps[], card: card_type) => {
-    let total = 0;
-    for (const card_product of card.products) {
-      const current_product = products.find(
-        (product) => product.id === card_product.id
-      );
-      if (!current_product) return;
-      const sub_total = current_product.price * card_product.quantity;
-      total += sub_total;
-    }
-    const formatter_total = toMoney(total.toFixed(2), { unit: 'R$' });
-    setTotal(formatter_total);
+    const { total_format, products: products_on_card } = calculate_total_price(
+      products,
+      card
+    );
+    const get_product = products_on_card.map((prod) => prod.product);
+    setProductOnCard(get_product);
+    setTotal(total_format);
   };
+
   return (
     <main className="m-full flex h-full overflow-hidden">
       <section className="flex w-full flex-1 flex-col p-2">
@@ -102,12 +88,7 @@ export default function Card() {
         </div>
         <div className="flex min-h-[100px] w-full flex-col self-end p-2">
           <span className="text-white">Card Total {total}</span>
-          <OrderModal>
-            <button className="flex w-full flex-1 items-center justify-center gap-4 rounded bg-emerald-700 text-3xl font-semibold text-gray-100 hover:bg-emerald-500/20">
-              <ShoppingCart size={40} />
-              CheckOut
-            </button>
-          </OrderModal>
+          <OrderModal card={card} products={product_list} />
         </div>
       </section>
     </main>

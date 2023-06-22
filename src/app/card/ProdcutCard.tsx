@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ProductCardInfos } from '@/app/card/ProductCardInfos';
 import { StarNote } from '@/components/StartNote';
 import { ProductCardQuantity } from '@/app/card/ProductCardQuantity';
-import { ProductCardProps } from '@/components/Categories/Categories';
+import { ProductCardProps } from '@/lib/ProductTypes';
 
 export const ProductCard = ({ product }: { product: ProductCardProps }) => {
   let formatter_label = `Specificacoes do producto: peso ${product.product_specification.weight}Km, largura: ${product.product_specification.width}cm, altura: ${product.product_specification.height}cm, comprimento: ${product.product_specification.length}cm`;
