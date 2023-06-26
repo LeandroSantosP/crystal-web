@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import decode from 'jwt-decode';
 
-interface User {
+export interface User {
   sub: string;
   name: string;
   avatar_url: string;

@@ -12,11 +12,11 @@ import Image from 'next/image';
 import { Categories_Formatted_return } from '@/lib/TranslateCategories';
 import { CategoryADMCard } from '../CategoryADMCard';
 import { CheckBox } from '../CheckBox';
-import { ProductCardProps } from '../Categories/Categories';
 import { ADMProvider } from '@/shared/storage';
 import { CategoryProvider } from '@/shared/storage/Categories/CategoryProvider';
 import Cookie from 'js-cookie';
 import { RadixCloseButton } from '@/components/RadixCloseButton';
+import { ProductCardProps } from '@/lib/ProductTypes';
 
 interface EditProductModalProps {
   children: ReactNode;

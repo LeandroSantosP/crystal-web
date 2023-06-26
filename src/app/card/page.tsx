@@ -10,7 +10,7 @@ import { OrderModal } from '@/components/modal/OrderModal';
 import { ProductCardProps } from '@/lib/ProductTypes';
 import { calculate_total_price } from '@/app/card/CalculateTotalPrice';
 
-//catainer pai tem h-full e overflow-hidden, e o cantainer filho tem h-full e overflow-auto
+// catainer pai tem h-full e overflow-hidden, e o cantainer filho tem h-full e overflow-auto
 
 export default function Card() {
   const {
@@ -20,6 +20,7 @@ export default function Card() {
   const {
     states: { card },
   } = CardProvider();
+
   const [productOnCard, setProductOnCard] = useState<ProductCardProps[]>([]);
   const [total, setTotal] = useState('');
 

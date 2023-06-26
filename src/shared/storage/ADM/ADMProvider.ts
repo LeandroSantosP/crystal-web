@@ -1,6 +1,6 @@
 import { create, SetState } from 'zustand';
 import { api } from '@/lib/api';
-import { ProductCardProps } from '@/components/Categories/Categories';
+import { ProductCardProps } from '@/lib/ProductTypes';
 
 interface set_category_product_props {
   jwt: string;

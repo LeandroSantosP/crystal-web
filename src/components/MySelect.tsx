@@ -6,6 +6,7 @@ interface MySelectProps {
   callback(value: string): any;
   default_value?: string;
   label?: boolean;
+  name?: string;
   label_text?: string;
   options: { value: string; text: string }[];
 }
@@ -16,6 +17,7 @@ export const MySelect = ({
   options,
   label_text,
   label = false,
+  name = 'countries',
 }: MySelectProps) => {
   const [value, setValue] = useState(default_value);
 
@@ -30,6 +32,7 @@ export const MySelect = ({
         defaultValue={default_value}
         onChange={(e) => setValue(e.target.value)}
         id="countries"
+        name={name}
         className="flex w-full flex-1 rounded-md bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
       >
         {options.map(({ text, value }) => (
